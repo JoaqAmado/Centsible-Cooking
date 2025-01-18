@@ -6,7 +6,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { Clock, DollarSign, ChefHat, Utensils } from "lucide-react";
+import { Clock, DollarSign, ChefHat, Utensils, CalendarDays } from "lucide-react";
 import {
   Select,
   SelectContent,
@@ -14,6 +14,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { Calendar } from "@/components/ui/calendar";
 
 interface RecipeDialogProps {
   open: boolean;
@@ -28,7 +29,7 @@ interface RecipeDialogProps {
     instructions?: string[];
     difficulty?: string;
   };
-  onAddToCalendar?: (recipeId: string, mealType: string) => void;
+  onAddToCalendar?: (recipeId: string, mealType: string, date: Date) => void;
 }
 
 const RecipeDialog = ({
@@ -38,6 +39,7 @@ const RecipeDialog = ({
   onAddToCalendar = () => {},
 }: RecipeDialogProps) => {
   const [selectedMealType, setSelectedMealType] = React.useState("breakfast");
+  const [selectedDate, setSelectedDate] = React.useState<Date>(new Date());
 
   if (!recipe) return null;
 
@@ -45,11 +47,10 @@ const RecipeDialog = ({
     <Dialog open={open} onOpenChange={onClose}>
       <DialogContent className="max-w-3xl">
         <DialogHeader>
-          <DialogTitle className="text-2xl font-bold">
-            {recipe.title}
-          </DialogTitle>
+          <DialogTitle className="text-2xl font-bold">{recipe.title}</DialogTitle>
         </DialogHeader>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {/* Recipe Details */}
           <div>
             <img
               src={recipe.image}
@@ -71,50 +72,59 @@ const RecipeDialog = ({
               </div>
             </div>
           </div>
+
+          {/* Add to Calendar Section */}
           <div className="space-y-6">
+            {/* Ingredients List */}
             <div>
               <h3 className="text-lg font-semibold mb-2 flex items-center gap-2">
                 <Utensils className="h-5 w-5" /> Ingredients
               </h3>
-              <div className="max-h-[200px] overflow-y-auto pr-2">
-                <ul className="list-disc pl-5 space-y-1">
-                  {(
-                    recipe.ingredients || [
-                      "4 oz salmon fillet",
-                      "1 bunch asparagus",
-                      "2 tbsp olive oil",
-                      "Salt and pepper to taste",
-                      "1 lemon",
-                    ]
-                  ).map((ingredient, index) => (
-                    <li key={index} className="text-gray-600">
-                      {ingredient}
-                    </li>
-                  ))}
-                </ul>
-              </div>
+              <ul className="list-disc pl-5 space-y-1">
+                {(recipe.ingredients || []).map((ingredient, index) => (
+                  <li key={index} className="text-gray-600">
+                    {ingredient}
+                  </li>
+                ))}
+              </ul>
             </div>
+
+            {/* Meal Type and Date Picker */}
             <div className="space-y-4">
-              <div className="flex items-center gap-4">
-                <Select
-                  value={selectedMealType}
-                  onValueChange={setSelectedMealType}
-                >
-                  <SelectTrigger className="w-[180px]">
-                    <SelectValue placeholder="Select meal type" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="breakfast">Breakfast</SelectItem>
-                    <SelectItem value="lunch">Lunch</SelectItem>
-                    <SelectItem value="dinner">Dinner</SelectItem>
-                  </SelectContent>
-                </Select>
-                <Button
-                  onClick={() => onAddToCalendar(recipe.id, selectedMealType)}
-                >
-                  Add to Calendar
-                </Button>
+              <Select
+                value={selectedMealType}
+                onValueChange={setSelectedMealType}
+              >
+                <SelectTrigger className="w-[180px]">
+                  <SelectValue placeholder="Select meal type" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="breakfast">Breakfast</SelectItem>
+                  <SelectItem value="lunch">Lunch</SelectItem>
+                  <SelectItem value="dinner">Dinner</SelectItem>
+                </SelectContent>
+              </Select>
+
+              <div>
+                <h4 className="text-lg font-semibold mb-2 flex items-center gap-2">
+                  <CalendarDays className="h-5 w-5" /> Select a Date
+                </h4>
+                <Calendar
+                  mode="single"
+                  selected={selectedDate}
+                  onSelect={setSelectedDate}
+                  className="w-fit rounded-md border"
+                />
               </div>
+
+              {/* Add to Calendar Button */}
+              <Button
+                onClick={() =>
+                  onAddToCalendar(recipe.id, selectedMealType, selectedDate)
+                }
+              >
+                Add to Calendar
+              </Button>
             </div>
           </div>
         </div>
@@ -122,6 +132,5 @@ const RecipeDialog = ({
     </Dialog>
   );
 };
-  
 
 export default RecipeDialog;
