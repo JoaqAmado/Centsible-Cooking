@@ -33,6 +33,15 @@ const Home = ({ onRandomRecipe = () => {} }: HomeProps) => {
 
   return (
     <div className="min-h-screen bg-gray-100 p-6">
+      <div className="mb-8 text-center">
+        <h1 className="text-4xl font-bold text-gray-900 tracking-tight">
+          Centsible Cooking
+        </h1>
+        <p className="mt-2 text-lg text-gray-600">
+          Smart meal planning for your budget
+        </p>
+      </div>
+
       <div className="mb-6">
         <SearchPanel onSearch={handleSearch} />
       </div>
