@@ -78,7 +78,7 @@ const RecipeDialog = ({
             {/* Ingredients List */}
             <div>
               <h3 className="text-lg font-semibold mb-2 flex items-center gap-2">
-                <Utensils className="h-5 w-5" /> Ingredients
+                <Utensils className="h-5 w-5" /> Ingredients & Instructions
               </h3>
               <ul className="list-disc pl-5 space-y-1">
                 {(recipe.ingredients || []).map((ingredient, index) => (
