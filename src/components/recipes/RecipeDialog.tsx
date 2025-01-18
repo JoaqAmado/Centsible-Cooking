@@ -60,7 +60,7 @@ const RecipeDialog = ({
             <div className="flex justify-between items-center mt-4">
               <div className="flex items-center gap-2">
                 <DollarSign className="h-5 w-5 text-gray-600" />
-                <span className="text-lg">${recipe.cost.toFixed(2)}</span>
+                <span className="text-lg">${recipe.cost}</span>
               </div>
               <div className="flex items-center gap-2">
                 <Clock className="h-5 w-5 text-gray-600" />

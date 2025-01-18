@@ -49,12 +49,47 @@ function searchParamsToPrompt(searchParams: any): string{
   }
 
   prompt += "The recipe should be " + searchParams.difficulty + " difficulty and should take no longer than " + searchParams.prepTime + " minutes to make. ";
-  prompt += "Lastly, the meal should cost no more than $" + searchParams.budget + ".";
+  prompt += "Lastly, the meal should cost no more than $" + searchParams.budget + ". Do not use any unnecessaary words in your response, imagine you're talking to a machine.\n";
 
+  prompt += "Each recipe should be displayed in a minimalistic format that is easy to parse and output should be of the form:\n";
+  prompt += "<Recipe Number, number only>\n";
+  prompt += "<Recipe Name>\n";
+  prompt += "<Recipe Cost>\n";
+  prompt += "<Recipe Prep Time (in minutes)>\n";
+  prompt += "<Recipe Difficulty (Easy, Medium, or Hard)>\n";
+  prompt += "<Recipe Ingredients as one line seperated by commas ie 1 tbsp butter, 3 tomatos, 2 oranges, ...>\n";
   return prompt;
 
 }
 
+function updateRecipeList(result: string): any{
+
+  var curRecipes = [];
+
+  var ind: number = 0;
+  var lines: Array<String> = result.split(/\r?\n/);
+  console.log(lines);
+  for (let i = 0; i < 10; i++){
+    while(ind < lines.length && lines[ind] == ""){
+      ind++;
+    }
+    let rec = {
+      id: lines[ind++],
+      title: lines[ind++],
+      image: "https://images.unsplash.com/photo-1467003909585-2f8a72700288",
+      cost: lines[ind++],
+      prepTime: lines[ind++],
+      difficulty: lines[ind++],
+      ingredients: lines[ind++].split(','),
+      isFavorite: false,
+    };
+    curRecipes.push(rec);
+  }
+
+  console.log(curRecipes);
+  return curRecipes;
+
+}
 
 interface HomeProps {
   onRandomRecipe?: () => void;
@@ -62,29 +97,31 @@ interface HomeProps {
 
 const Home = ({ onRandomRecipe = () => {} }: HomeProps) => {
   const [selectedRecipe, setSelectedRecipe] = React.useState<any>(null);
+  const [currentRecipes, setCurrentRecipes] = React.useState<Array<any>>(defaultRecipes);
 
   const handleSearch = (searchParams: any) => {
     console.log("Search params:", searchParams);
     console.log(searchParamsToPrompt(searchParams));
-    queryGemini(searchParamsToPrompt(searchParams)).then(result => console.log(result));
+    setCurrentRecipes([]);
+    queryGemini(searchParamsToPrompt(searchParams)).then(result => setCurrentRecipes(updateRecipeList(result)));
   };
 
   const handleRecipeClick = (recipeId: string) => {
     // In a real app, you would fetch the recipe details here
-    for (let i = 0; i < defaultRecipes.length; i++){
-      if (defaultRecipes[i].id == recipeId){
-        setSelectedRecipe(defaultRecipes[i]);
+    for (let i = 0; i < currentRecipes.length; i++){
+      if (currentRecipes[i].id == recipeId){
+        setSelectedRecipe(currentRecipes[i]);
       }
     }
   };
 
   const handleFavoriteClick = (recipeId: string) => {
     console.log("Favorite clicked:", recipeId);
-    for (let i = 0; i < defaultRecipes.length; i++){
-      if (defaultRecipes[i].id == recipeId){
-        console.log(defaultRecipes[i].isFavorite);
-        defaultRecipes[i].isFavorite = !defaultRecipes[i].isFavorite;
-        console.log(defaultRecipes[i].isFavorite);
+    for (let i = 0; i < currentRecipes.length; i++){
+      if (currentRecipes[i].id == recipeId){
+        console.log(currentRecipes[i].isFavorite);
+        currentRecipes[i].isFavorite = !currentRecipes[i].isFavorite;
+        console.log(currentRecipes[i].isFavorite);
       }
     }
   };
@@ -116,7 +153,7 @@ const Home = ({ onRandomRecipe = () => {} }: HomeProps) => {
       <div className="flex flex-col gap-6">
         <div className="relative min-h-[600px]">
           <RecipeGrid
-            recipes = {defaultRecipes}
+            recipes = {currentRecipes}
             onRecipeClick={handleRecipeClick}
             onFavoriteClick={handleFavoriteClick}
           />
@@ -145,7 +182,7 @@ const Home = ({ onRandomRecipe = () => {} }: HomeProps) => {
   );
 };
 
-const defaultRecipes = [
+var defaultRecipes = [
   {
     id: "1",
     title: "Grilled Salmon with Asparagus",

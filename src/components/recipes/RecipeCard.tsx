@@ -66,7 +66,7 @@ const RecipeCard = ({
         <div className="flex items-center justify-between w-full text-sm text-gray-600">
           <div className="flex items-center gap-1">
             <DollarSign className="h-4 w-4" />
-            <span>{cost.toFixed(2)}</span>
+            <span>{cost}</span>
           </div>
           <div className="flex items-center gap-1">
             <Clock className="h-4 w-4" />
