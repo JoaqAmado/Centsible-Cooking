@@ -76,21 +76,23 @@ const RecipeDialog = ({
               <h3 className="text-lg font-semibold mb-2 flex items-center gap-2">
                 <Utensils className="h-5 w-5" /> Ingredients
               </h3>
-              <ul className="list-disc pl-5 space-y-1">
-                {(
-                  recipe.ingredients || [
-                    "4 oz salmon fillet",
-                    "1 bunch asparagus",
-                    "2 tbsp olive oil",
-                    "Salt and pepper to taste",
-                    "1 lemon",
-                  ]
-                ).map((ingredient, index) => (
-                  <li key={index} className="text-gray-600">
-                    {ingredient}
-                  </li>
-                ))}
-              </ul>
+              <div className="max-h-[200px] overflow-y-auto pr-2">
+                <ul className="list-disc pl-5 space-y-1">
+                  {(
+                    recipe.ingredients || [
+                      "4 oz salmon fillet",
+                      "1 bunch asparagus",
+                      "2 tbsp olive oil",
+                      "Salt and pepper to taste",
+                      "1 lemon",
+                    ]
+                  ).map((ingredient, index) => (
+                    <li key={index} className="text-gray-600">
+                      {ingredient}
+                    </li>
+                  ))}
+                </ul>
+              </div>
             </div>
             <div className="space-y-4">
               <div className="flex items-center gap-4">
@@ -120,5 +122,6 @@ const RecipeDialog = ({
     </Dialog>
   );
 };
+  
 
 export default RecipeDialog;
