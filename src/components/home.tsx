@@ -7,6 +7,55 @@ import RecipeDialog from "./recipes/RecipeDialog";
 import { Button } from "@/components/ui/button";
 import { Dices } from "lucide-react";
 
+import axios from 'axios';
+
+const queryGemini = async (prompt: string): Promise<string> => {
+  const API_KEY = "AIzaSyCcp85pNE3nD-hdoY_YmW4t7CW5y_BMzC8";
+  const API_URL = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent';
+
+  try {
+    const response = await axios.post(
+      `${API_URL}?key=${API_KEY}`,
+      {
+        contents: [{ parts: [{ text: prompt }] }]
+      },
+      { headers: { 'Content-Type': 'application/json' } }
+    );
+
+    return response.data.candidates[0].content.parts[0].text;
+  } catch (error) {
+    console.error('Error querying Gemini:', error);
+    return 'An error occurred while querying Gemini.';
+  }
+};
+
+//Create prompt for Gemini based on search parameters
+function searchParamsToPrompt(searchParams: any): string{
+
+  var prompt: string = "Give me 10 "
+  if (searchParams.dietaryRestrictions != "none"){
+    prompt += searchParams.dietaryRestrictions;
+    prompt += " ";
+  } 
+  prompt += "recipes that must contain the following ingredients: ";
+  for (let i = 0; i < searchParams.ingredients.length; i++){
+    prompt += searchParams.ingredients[i];
+    if (i == searchParams.ingredients.length - 1){
+      prompt += ". ";
+    }
+    else{
+      prompt += ", ";
+    }
+  }
+
+  prompt += "The recipe should be " + searchParams.difficulty + " difficulty and should take no longer than " + searchParams.prepTime + " minutes to make. ";
+  prompt += "Lastly, the meal should cost no more than $" + searchParams.budget + ".";
+
+  return prompt;
+
+}
+
+
 interface HomeProps {
   onRandomRecipe?: () => void;
 }
@@ -16,6 +65,8 @@ const Home = ({ onRandomRecipe = () => {} }: HomeProps) => {
 
   const handleSearch = (searchParams: any) => {
     console.log("Search params:", searchParams);
+    console.log(searchParamsToPrompt(searchParams));
+    queryGemini(searchParamsToPrompt(searchParams)).then(result => console.log(result));
   };
 
   const handleRecipeClick = (recipeId: string) => {
