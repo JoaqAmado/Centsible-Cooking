@@ -29,7 +29,7 @@ const CostSummary = ({
   };
 
   return (
-    <Card className={cn("w-[300px] bg-white", className)}>
+    <Card className={cn("w-full h-[700px] bg-white", className)}>
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
           <DollarSign className="h-5 w-5" />

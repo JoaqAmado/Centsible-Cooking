@@ -21,7 +21,6 @@ interface MealPlan {
 interface MealCalendarProps {
   mealPlans?: MealPlan[];
   onDateSelect?: (date: Date) => void;
-  onMealDrop?: (date: Date, mealType: string, recipeId: string) => void;
   selectedDate?: Date;
 }
 
@@ -40,7 +39,6 @@ const MealCalendar = ({
     },
   ],
   onDateSelect = () => {},
-  onMealDrop = () => {},
   selectedDate = new Date(),
 }: MealCalendarProps) => {
   const [currentDate, setCurrentDate] = React.useState<Date>(selectedDate);
@@ -59,7 +57,7 @@ const MealCalendar = ({
     )?.meals || [];
 
   return (
-    <Card className="w-[500px] h-[700px] bg-white">
+    <Card className="w-full h-[700px] bg-white">
       <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-4">
         <CardTitle className="text-xl font-bold flex items-center gap-2">
           <CalendarDays className="w-5 h-5" />
@@ -107,16 +105,7 @@ const MealCalendar = ({
           <ScrollArea className="h-[250px] w-full rounded-md border p-4">
             <div className="space-y-4">
               {["breakfast", "lunch", "dinner"].map((mealType) => (
-                <div
-                  key={mealType}
-                  className="p-4 rounded-lg border border-dashed"
-                  onDragOver={(e) => e.preventDefault()}
-                  onDrop={(e) => {
-                    e.preventDefault();
-                    const recipeId = e.dataTransfer.getData("recipe");
-                    onMealDrop(currentDate, mealType, recipeId);
-                  }}
-                >
+                <div key={mealType} className="p-4 rounded-lg border">
                   <h4 className="text-sm font-medium capitalize mb-2">
                     {mealType}
                   </h4>
@@ -138,7 +127,7 @@ const MealCalendar = ({
                     </div>
                   ) : (
                     <p className="text-sm text-muted-foreground">
-                      Drop a recipe here
+                      No meal planned
                     </p>
                   )}
                 </div>

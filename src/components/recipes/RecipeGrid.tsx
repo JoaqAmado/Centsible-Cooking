@@ -67,6 +67,30 @@ const defaultRecipes: Recipe[] = [
     prepTime: "10 mins",
     isFavorite: false,
   },
+  {
+    id: "7",
+    title: "Mushroom Risotto",
+    image: "https://images.unsplash.com/photo-1476124369491-e7addf5db371",
+    cost: 11.99,
+    prepTime: "45 mins",
+    isFavorite: false,
+  },
+  {
+    id: "8",
+    title: "Spicy Tofu Stir-Fry",
+    image: "https://images.unsplash.com/photo-1512058564366-18510be2db19",
+    cost: 9.5,
+    prepTime: "25 mins",
+    isFavorite: false,
+  },
+  {
+    id: "9",
+    title: "Greek Salad",
+    image: "https://images.unsplash.com/photo-1540189549336-e6e99c3679fe",
+    cost: 8.5,
+    prepTime: "15 mins",
+    isFavorite: false,
+  },
 ];
 
 const RecipeGrid = ({
@@ -76,9 +100,9 @@ const RecipeGrid = ({
   className = "",
 }: RecipeGridProps) => {
   return (
-    <div className={`w-full h-full bg-gray-50 p-6 ${className}`}>
+    <div className={`w-full h-full bg-gray-50 p-6 rounded-lg ${className}`}>
       <ScrollArea className="h-full w-full">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 pb-6">
+        <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6 pb-6">
           {recipes.map((recipe) => (
             <RecipeCard
               key={recipe.id}

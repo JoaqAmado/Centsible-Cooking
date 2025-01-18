@@ -3,6 +3,7 @@ import SearchPanel from "./search/SearchPanel";
 import RecipeGrid from "./recipes/RecipeGrid";
 import MealCalendar from "./planner/MealCalendar";
 import CostSummary from "./budget/CostSummary";
+import RecipeDialog from "./recipes/RecipeDialog";
 import { Button } from "@/components/ui/button";
 import { Dices } from "lucide-react";
 
@@ -11,12 +12,16 @@ interface HomeProps {
 }
 
 const Home = ({ onRandomRecipe = () => {} }: HomeProps) => {
+  const [selectedRecipe, setSelectedRecipe] = React.useState<any>(null);
+
   const handleSearch = (searchParams: any) => {
     console.log("Search params:", searchParams);
   };
 
   const handleRecipeClick = (recipeId: string) => {
-    console.log("Recipe clicked:", recipeId);
+    // In a real app, you would fetch the recipe details here
+    const recipe = defaultRecipes.find((r) => r.id === recipeId);
+    setSelectedRecipe(recipe);
   };
 
   const handleFavoriteClick = (recipeId: string) => {
@@ -27,8 +32,9 @@ const Home = ({ onRandomRecipe = () => {} }: HomeProps) => {
     console.log("Date selected:", date);
   };
 
-  const handleMealDrop = (date: Date, mealType: string, recipeId: string) => {
-    console.log("Meal dropped:", { date, mealType, recipeId });
+  const handleAddToCalendar = (recipeId: string, mealType: string) => {
+    console.log("Adding to calendar:", { recipeId, mealType });
+    setSelectedRecipe(null);
   };
 
   return (
@@ -46,8 +52,8 @@ const Home = ({ onRandomRecipe = () => {} }: HomeProps) => {
         <SearchPanel onSearch={handleSearch} />
       </div>
 
-      <div className="flex flex-col lg:flex-row gap-6">
-        <div className="flex-1 relative">
+      <div className="flex flex-col gap-6">
+        <div className="relative min-h-[600px]">
           <RecipeGrid
             onRecipeClick={handleRecipeClick}
             onFavoriteClick={handleFavoriteClick}
@@ -61,16 +67,40 @@ const Home = ({ onRandomRecipe = () => {} }: HomeProps) => {
           </Button>
         </div>
 
-        <div className="lg:w-[850px] flex gap-6">
-          <MealCalendar
-            onDateSelect={handleDateSelect}
-            onMealDrop={handleMealDrop}
-          />
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <MealCalendar onDateSelect={handleDateSelect} />
           <CostSummary />
         </div>
       </div>
+
+      <RecipeDialog
+        open={!!selectedRecipe}
+        onClose={() => setSelectedRecipe(null)}
+        recipe={selectedRecipe}
+        onAddToCalendar={handleAddToCalendar}
+      />
     </div>
   );
 };
+
+const defaultRecipes = [
+  {
+    id: "1",
+    title: "Grilled Salmon with Asparagus",
+    image: "https://images.unsplash.com/photo-1467003909585-2f8a72700288",
+    cost: 15.99,
+    prepTime: "25 mins",
+    difficulty: "Medium",
+    ingredients: [
+      "4 oz salmon fillet",
+      "1 bunch asparagus",
+      "2 tbsp olive oil",
+      "Salt and pepper to taste",
+      "1 lemon",
+    ],
+    isFavorite: false,
+  },
+  // ... other recipes
+];
 
 export default Home;
