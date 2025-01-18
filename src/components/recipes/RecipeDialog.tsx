@@ -45,7 +45,7 @@ const RecipeDialog = ({
 
   return (
     <Dialog open={open} onOpenChange={onClose}>
-      <DialogContent className="max-w-3xl">
+      <DialogContent className="max-w-[80vw]">
         <DialogHeader>
           <DialogTitle className="text-2xl font-bold">{recipe.title}</DialogTitle>
         </DialogHeader>
@@ -76,21 +76,36 @@ const RecipeDialog = ({
           {/* Add to Calendar Section */}
           <div className="space-y-6">
             {/* Ingredients List */}
-            <div>
-              <h3 className="text-lg font-semibold mb-2 flex items-center gap-2">
+            <div className="max-h-[400px] overflow-y-auto pr-2">
+            <h3 className="text-lg font-semibold mb-2 flex items-center gap-2">
                 <Utensils className="h-5 w-5" /> Ingredients & Instructions
               </h3>
-              <ul className="list-disc pl-5 space-y-1">
-                {(recipe.ingredients || []).map((ingredient, index) => (
-                  <li key={index} className="text-gray-600">
-                    {ingredient}
-                  </li>
-                ))}
-              </ul>
-            </div>
+                <ul className="list-disc pl-5 space-y-1">
+                  {(recipe.ingredients || []).map((ingredient, index) => (
+                    <li key={index} className="text-gray-600">
+                      {ingredient}
+                    </li>
+                  ))}
+                </ul>
+
+
+            <div className = "h-[2vh] w-[100%]"></div>
 
             {/* Meal Type and Date Picker */}
             <div className="space-y-4">
+
+              <div>
+                <h4 className="text-lg font-semibold mb-2 flex items-center gap-2">
+                  <CalendarDays className="h-5 w-5" /> Select a Date
+                </h4>
+                <Calendar
+                  mode="single"
+                  selected={selectedDate}
+                  onSelect={setSelectedDate}
+                  className="w-fit rounded-md border"
+                />
+              </div>
+
               <Select
                 value={selectedMealType}
                 onValueChange={setSelectedMealType}
@@ -105,18 +120,6 @@ const RecipeDialog = ({
                 </SelectContent>
               </Select>
 
-              <div>
-                <h4 className="text-lg font-semibold mb-2 flex items-center gap-2">
-                  <CalendarDays className="h-5 w-5" /> Select a Date
-                </h4>
-                <Calendar
-                  mode="single"
-                  selected={selectedDate}
-                  onSelect={setSelectedDate}
-                  className="w-fit rounded-md border"
-                />
-              </div>
-
               {/* Add to Calendar Button */}
               <Button
                 onClick={() =>
@@ -126,6 +129,7 @@ const RecipeDialog = ({
                 Add to Calendar
               </Button>
             </div>
+          </div>
           </div>
         </div>
       </DialogContent>
