@@ -89,12 +89,12 @@ const MealCalendar = ({
         </div>
       </CardHeader>
       <CardContent className="grid gap-4">
-        <div className="grid grid-cols-7 gap-6">
+        <div className="grid justify-center">
           <Calendar
             mode="single"
             selected={currentDate}
             onSelect={handleDateSelect}
-            className="rounded-md border"
+            className="w-max rounded-md border"
           />
         </div>
         <Separator />
