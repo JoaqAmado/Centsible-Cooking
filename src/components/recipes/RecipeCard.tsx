@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   Card,
   CardContent,
@@ -15,7 +15,7 @@ interface RecipeCardProps {
   cost?: number;
   prepTime?: string;
   isFavorite?: boolean;
-  onFavoriteClick?: () => void;
+  onFavoriteClick?: (isFavorite: boolean) => void;
   onClick?: () => void;
   className?: string;
 }
@@ -25,11 +25,20 @@ const RecipeCard = ({
   image = "https://images.unsplash.com/photo-1546069901-ba9599a7e63c",
   cost = 12.99,
   prepTime = "30 mins",
-  isFavorite = false,
-  onFavoriteClick = () => {},
+  isFavorite: initialFavorite,
+  onFavoriteClick = () => {return false},
   onClick = () => {},
   className,
 }: RecipeCardProps) => {
+  const [isFavorite,setIsFavorite] = useState(initialFavorite)
+
+  const handleFavoriteClick = (e: React.MouseEvent) => {
+    e.stopPropagation(); // Prevent triggering `onClick` for the card
+    const newFavoriteStatus = !isFavorite;
+    setIsFavorite(newFavoriteStatus);
+    onFavoriteClick(newFavoriteStatus); // Notify parent if needed
+  };
+
   return (
     <Card
       className={cn(
@@ -48,10 +57,7 @@ const RecipeCard = ({
             variant="ghost"
             size="icon"
             className="h-8 w-8"
-            onClick={(e) => {
-              e.stopPropagation();
-              onFavoriteClick();
-            }}
+            onClick={handleFavoriteClick}
           >
             <Heart
               className={cn(
