@@ -78,7 +78,7 @@ const RecipeDialog = ({
             {/* Ingredients List */}
             <div className="max-h-[400px] overflow-y-auto pr-2">
             <h3 className="text-lg font-semibold mb-2 flex items-center gap-2">
-                <Utensils className="h-5 w-5" /> Ingredients & Instructions
+                <Utensils className="h-5 w-5" /> Ingredients
               </h3>
                 <ul className="list-disc pl-5 space-y-1">
                   {(recipe.ingredients || []).map((ingredient, index) => (
@@ -90,6 +90,19 @@ const RecipeDialog = ({
 
 
             <div className = "h-[2vh] w-[100%]"></div>
+
+            <h3 className="text-lg font-semibold mb-2 flex items-center gap-2">
+                <Utensils className="h-5 w-5" /> Instructions
+              </h3>
+                <ul className="list-disc pl-5 space-y-1">
+                  {(recipe.instructions || []).map((instruction, index) => (
+                    <li key={index} className="text-gray-600">
+                      {instruction}
+                    </li>
+                  ))}
+                </ul>
+
+                <div className = "h-[2vh] w-[100%]"></div>
 
             {/* Meal Type and Date Picker */}
             <div className="space-y-4">

@@ -58,6 +58,7 @@ function searchParamsToPrompt(searchParams: any): string{
   prompt += "<Recipe Prep Time (in minutes)>\n";
   prompt += "<Recipe Difficulty (Easy, Medium, or Hard)>\n";
   prompt += "<Recipe Ingredients as one line seperated by commas ie 1 tbsp butter, 3 tomatos, 2 oranges, ...>\n";
+  prompt += "<Recipe Instructions as one line seperated by commas>\n";
   return prompt;
 
 }
@@ -69,6 +70,9 @@ function updateRecipeList(result: string): any{
   var ind: number = 0;
   var lines: Array<String> = result.split(/\r?\n/);
   console.log(lines);
+  while(ind < lines.length && lines[ind] != "1"){
+    ind++;
+  }
   for (let i = 0; i < 10; i++){
     while(ind < lines.length && lines[ind] == ""){
       ind++;
@@ -82,6 +86,7 @@ function updateRecipeList(result: string): any{
       prepTime: lines[ind++] + " min",
       difficulty: lines[ind++],
       ingredients: lines[ind++].split(','),
+      instructions: lines[ind++].split(','),
       isFavorite: false,
     };
     curRecipes.push(rec);
