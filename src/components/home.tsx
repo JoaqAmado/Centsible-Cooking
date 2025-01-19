@@ -76,9 +76,10 @@ function updateRecipeList(result: string): any{
     let rec = {
       id: lines[ind++],
       title: lines[ind++],
-      image: "https://images.unsplash.com/photo-1467003909585-2f8a72700288",
-      cost: lines[ind++],
-      prepTime: lines[ind++],
+      image: "https://image.pollinations.ai/prompt/" + lines[ind - 1].replace(/ /g,'%20')
+      ,
+      cost: lines[ind++].substring(1, lines[ind - 1].length),
+      prepTime: lines[ind++] + " min",
       difficulty: lines[ind++],
       ingredients: lines[ind++].split(','),
       isFavorite: false,
