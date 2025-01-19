@@ -122,7 +122,7 @@ const MealCalendar = ({
                         $
                         {selectedDayMeals
                           .find((meal) => meal.type === mealType)
-                          ?.recipe.cost.toFixed(2)}
+                          ?.recipe.cost}
                       </span>
                     </div>
                   ) : (

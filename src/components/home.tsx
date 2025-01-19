@@ -104,6 +104,7 @@ interface HomeProps {
 const Home = ({ onRandomRecipe = () => {} }: HomeProps) => {
   const [selectedRecipe, setSelectedRecipe] = React.useState<any>(null);
   const [currentRecipes, setCurrentRecipes] = React.useState<Array<any>>(defaultRecipes);
+  const [mealBank, setMealBank] = React.useState<Array<any>>([]);
 
   const handleSearch = (searchParams: any) => {
     console.log("Search params:", searchParams);
@@ -136,8 +137,28 @@ const Home = ({ onRandomRecipe = () => {} }: HomeProps) => {
     console.log("Date selected:", date);
   };
 
-  const handleAddToCalendar = (recipeId: string, mealType: string) => {
-    console.log("Adding to calendar:", { recipeId, mealType });
+  const handleAddToCalendar = (recipeId: string, mealType: string, dateSelected: Date) => {
+    console.log("Adding to calendar:", { recipeId, mealType, dateSelected });
+    var updatedMealBank = [].concat(mealBank);
+    var alreadyExists: boolean = false;
+    for (let i = 0; i < mealBank.length; i++){
+      if (updatedMealBank[i].date == dateSelected){
+        alreadyExists = true;
+        updatedMealBank[i].meals.push({
+          type: mealType,
+          recipe: {title: selectedRecipe.title, cost: selectedRecipe.cost}
+        });
+      }
+    }
+    if (!alreadyExists){
+      updatedMealBank.push({
+        date: dateSelected,
+        meals: [{
+          type: mealType,
+          recipe: {title: selectedRecipe.title, cost: selectedRecipe.cost}
+        }]});
+    }
+    setMealBank(updatedMealBank);
     setSelectedRecipe(null);
   };
 
@@ -173,7 +194,7 @@ const Home = ({ onRandomRecipe = () => {} }: HomeProps) => {
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          <MealCalendar onDateSelect={handleDateSelect} />
+          <MealCalendar mealPlans={mealBank} onDateSelect={handleDateSelect} />
           <CostSummary />
         </div>
       </div>
